@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stream_exp/futures.dart';
+import 'package:stream_exp/streams.dart';
 
 void main() {
   runApp(const MainApp());
@@ -13,14 +13,16 @@ class MainApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: FutureBuilder(
-            future: getRandomChuckJoke(),
+          child: StreamBuilder(
+            stream: randomNumberStream(),
             builder: (context, snapshot) {
               if (snapshot.hasData &&
-                  snapshot.connectionState == ConnectionState.done) {
+                      snapshot.connectionState == ConnectionState.done ||
+                  snapshot.connectionState == ConnectionState.active) {
                 // FALL 1: Future ist komplett und hat Daten!
                 final response = snapshot.data;
-                return Text("$response");
+
+                return Text("Die Zahl ist: $response");
               } else if (snapshot.connectionState != ConnectionState.done) {
                 // FALL 2: Sind noch im Ladezustand
                 return const CircularProgressIndicator();
